@@ -112,29 +112,33 @@ function Emprestimo() {
         }
     };
 
-    const acaoCadastrar = async (e) => {
+
+  const acaoCadastrar = async (e) => {
         e.preventDefault();
-
-        const metodoHttp = editar ? "PUT" : "POST";
         
-        const objetoParaEnvio = {
-            ...objeto,
-            id_cliente: Number(objeto.id_cliente),
-            id_livro: Number(objeto.id_livro),
-            id_bibliotecario: Number(objeto.id_bibliotecario)
-        };
-
         try {
-            const retorno = await cadastrarEmprestimoAPI(objetoParaEnvio, metodoHttp);
-
-            setAlerta({ status: retorno.status, message: retorno.message });
-
-            if (retorno.status === "success") {
-                setExibirForm(false);
-                await recuperaEmprestimos();
+            let respostaAPI;
+            
+            if (editar) {
+                // Chama a função PUT
+                respostaAPI = await alterarEmprestimoAPI(objeto);
+            } else {
+                // Chama a função POST
+                respostaAPI = await cadastrarEmprestimoAPI(objeto);
             }
+
+            setAlerta({ status: respostaAPI.status, message: respostaAPI.message });
+            
+            // Se a operação foi bem sucedida
+            if (respostaAPI.status === "success") {
+                setObjeto(respostaAPI.objeto);
+                setExibirForm(false); // Fecha o modal/formulário ao ter sucesso
+                recuperaEmprestimos(); // Atualiza a lista
+            }
+            
         } catch (err) {
-            setAlerta({ status: "error", message: "Erro ao processar: " + err });
+            setAlerta({ status: "error", message: "Erro ao processar a requisição!" });
+            console.error(err.message);
         }
     };
 

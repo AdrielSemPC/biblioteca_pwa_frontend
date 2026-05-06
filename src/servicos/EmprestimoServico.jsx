@@ -43,7 +43,7 @@ export const cadastrarEmprestimoAPI = async (objeto) => {
     return d;
 }
 
-export const altearEmprestimoAPI = async (objeto) => {
+export const alterarEmprestimoAPI = async (objeto) => {
     const r = await fetch(`${process.env.REACT_APP_ENDERECO_API}/emprestimos/${objeto.id_emprestimo}`,
         {
             method: "PUT",
